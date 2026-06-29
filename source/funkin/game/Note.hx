@@ -3,6 +3,7 @@ package funkin.game;
 import flixel.math.FlxPoint;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRect;
+import funkin.backend.FunkinSprite;
 import funkin.backend.chart.ChartData;
 import funkin.backend.scripting.events.note.NoteCreationEvent;
 import funkin.backend.system.Conductor;
@@ -10,10 +11,8 @@ import funkin.backend.system.Conductor;
 using StringTools;
 
 @:allow(funkin.game.PlayState)
-class Note extends FlxSprite
+class Note extends FunkinSprite
 {
-	public var extra:Map<String, Dynamic> = [];
-
 	public var strumTime:Float = 0;
 
 	public var mustPress(get, never):Bool;
@@ -130,6 +129,7 @@ class Note extends FlxSprite
 		super();
 
 		moves = false;
+		applyStageMatrix = false;
 
 		if(prev != null)
 			this.prevNote = prev;
@@ -168,27 +168,27 @@ class Note extends FlxSprite
 			{
 				// case "My Custom Note Type": // hardcoding note types
 				default:
-					frames = Paths.getFrames(event.noteSprite);
+					frames = Paths.getFrames(event.noteSprite, false, null, null, animateSettings);
 
 					switch(event.strumID % 4) {
 						case 0:
-							animation.addByPrefix('scroll', 'purple0');
-							animation.addByPrefix('hold', 'purple hold piece');
-							animation.addByPrefix("holdend", "pruple end hold");
-							if (animation.exists("holdend") != true) // null or false
-								animation.addByPrefix('holdend', 'purple hold end');
+							addAnim('scroll', 'purple0')
+							addAnim('hold', 'purple hold piece')
+							addAnim('holdend', 'pruple end hold')
+							if (hasAnim("holdend") != true) // null or false
+								addAnim('holdend', 'purple hold end')
 						case 1:
-							animation.addByPrefix('scroll', 'blue0');
-							animation.addByPrefix('hold', 'blue hold piece');
-							animation.addByPrefix('holdend', 'blue hold end');
+							addAnim('scroll', 'blue0');
+							addAnim('hold', 'blue hold piece');
+							addAnim('holdend', 'blue hold end');
 						case 2:
-							animation.addByPrefix('scroll', 'green0');
-							animation.addByPrefix('hold', 'green hold piece');
-							animation.addByPrefix('holdend', 'green hold end');
+							addAnim('scroll', 'green0');
+							addAnim('hold', 'green hold piece');
+							addAnim('holdend', 'green hold end');
 						case 3:
-							animation.addByPrefix('scroll', 'red0');
-							animation.addByPrefix('hold', 'red hold piece');
-							animation.addByPrefix('holdend', 'red hold end');
+							addAnim('scroll', 'red0');
+							addAnim('hold', 'red hold piece');
+							addAnim('holdend', 'red hold end');
 					}
 
 					scale.set(event.noteScale, event.noteScale);
@@ -201,17 +201,17 @@ class Note extends FlxSprite
 		if (isSustainNote && prevNote != null)
 		{
 			alpha = 0.6;
-			animation.play('holdend');
+			playAnim('holdend');
 
 			updateHitbox();
 
 			if (prevNote.isSustainNote)
 			{
 				prevNote.nextSustain = this;
-				prevNote.animation.play('hold');
+				prevNote.playAnim('hold');
 			}
 		} else {
-			animation.play("scroll");
+			playAnim('scroll');
 		}
 
 		if (PlayState.instance != null) {
@@ -314,7 +314,7 @@ class Note extends FlxSprite
 	}
 
 	public function isOnScreenOriginal(?camera:FlxCamera):Bool {
-    return super.isOnScreen(camera);
+    	return super.isOnScreen(camera);
 	}
 
 	public var earlyPressWindow:Float = Flags.EARLY_HIT_WINDOW_RANGE;
