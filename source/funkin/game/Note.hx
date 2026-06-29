@@ -172,11 +172,11 @@ class Note extends FunkinSprite
 
 					switch(event.strumID % 4) {
 						case 0:
-							addAnim('scroll', 'purple0')
-							addAnim('hold', 'purple hold piece')
-							addAnim('holdend', 'pruple end hold')
+							addAnim('scroll', 'purple0');
+							addAnim('hold', 'purple hold piece');
+							addAnim('holdend', 'pruple end hold');
 							if (hasAnim("holdend") != true) // null or false
-								addAnim('holdend', 'purple hold end')
+								addAnim('holdend', 'purple hold end');
 						case 1:
 							addAnim('scroll', 'blue0');
 							addAnim('hold', 'blue hold piece');
