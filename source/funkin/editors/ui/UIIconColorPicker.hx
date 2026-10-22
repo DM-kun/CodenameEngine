@@ -64,7 +64,7 @@ class UIIconColorPicker extends UISliceSprite {
 	public function colorPick() {
 		if (__cachedColor == null) {
 			var imageBitmap:BitmapData = Assets.getBitmapData(__path, true, false);
-			__cachedColor = imageBitmap.getMostPresentColor();
+			__cachedColor = imageBitmap.getMostDominantColor();
 			imageBitmap.dispose();
 		}
 

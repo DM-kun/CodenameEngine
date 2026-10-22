@@ -68,6 +68,39 @@ final class BitmapUtil {
 		}
 		return mostPresentColor;
 	}
+	/**
+	 * Returns the most dominant color in a Bitmap. Heavily referenced from Psych Engine.
+	 * @param bmap Bitmap
+	 * @return FlxColor Color that is the most present.
+	 */
+	public static function getMostDominantColor(bmap:BitmapData):FlxColor {
+		// map containing all the colors and the number of times they've been assigned.
+		var colorMap:Map<FlxColor, Int> = [];
+		var color:FlxColor = 0;
+
+		for(x in 0...bmap.width) {
+			for(y in 0...bmap.height) {
+				color = bmap.getPixel32(x, y);
+				if(color.alphaFloat <= 0.05) continue;
+
+				color = FlxColor.fromRGB(color.red, color.green, color.blue, 255);
+				var count:Int = colorMap.exists(color) ? colorMap[color] : 0;
+				colorMap[color] = count + 1;
+			}
+		}
+
+		colorMap[FlxColor.BLACK] = 0;
+
+		var mostPresentColor:FlxColor = 0;
+		var mostPresentColorCount:Int = 0;
+		for(c=>n in colorMap) {
+			if (n >= mostPresentColorCount) {
+				mostPresentColorCount = n;
+				mostPresentColor = c;
+			}
+		}
+		return mostPresentColor;
+	}
 
 	/**
 	 * Returns a new bitmap without any empty transperent space on the edges
